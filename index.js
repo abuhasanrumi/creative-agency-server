@@ -35,90 +35,91 @@ client.connect(err => {
     const icon = req.files.icon;
     const title = req.body.title;
     const description = req.body.description;
-    const filePath = `${__dirname}/serviceIcon/${icon.name}`
-    icon.mv(filePath, err => {
-      if (err) {
-        console.log(err)
-        res.status(500).send({ msg: 'failed to upload image' })
-      }
-    const newImg = req.files.icon.data
+    // const filePath = `${__dirname}/serviceIcon/${icon.name}`
+    // icon.mv(filePath, err => {
+    //   if (err) {
+    //     console.log(err)
+    //     res.status(500).send({ msg: 'failed to upload image' })
+    //   }
+    const newImg = icon.data
     const encImg = newImg.toString('base64')
     var image = {
-      contentType: req.files.icon.mimetype,
-      size: req.files.icon.size,
+      contentType: icon.mimetype,
+      size: icon.size,
       img: Buffer.from(encImg, 'base64')
     }
 
     serviceCollection.insertOne({ title, description, icon })
       .then(result => {
-        fs.remove(filePath, error => {
-          if (error) {
-            console.log(error)
-            res.status(500).send({ msg: 'failed to upload image' })
-          }
+        // fs.remove(filePath, error => {
+        //   if (error) {
+        //     console.log(error)
+        //     res.status(500).send({ msg: 'failed to upload image' })
+        //   }
         res.send(result.insertedCount > 0)
-        })
-
       })
-    })
+
+    //   })
+    // })
   })
 
-  
+
   app.get('/services', (req, res) => {
     serviceCollection.find({})
-        .toArray((err, documents) => {
-            res.send(documents);
-        })
+      .toArray((err, documents) => {
+        res.send(documents);
+      })
   });
 
 
   app.post('/reviews', (req, res) => {
     const newReview = req.body;
-    
+
     reviewCollection.insertOne(newReview)
-    .then(result => {
-      res.send(result.insertedCount > 0)
-    })
+      .then(result => {
+        res.send(result.insertedCount > 0)
+      })
   })
 
   app.get('/reviews', (req, res) => {
     reviewCollection.find({}).limit(6)
-    .toArray((err, documents) => {
-      res.send(documents)
-    })
+      .toArray((err, documents) => {
+        res.send(documents)
+      })
   })
 
   app.post('/admins', (req, res) => {
     const newAdmin = req.body;
-    
+
     adminCollection.insertOne(newAdmin)
-    .then(result => {
-      res.send(result.insertedCount > 0)
-    })
+      .then(result => {
+        res.send(result.insertedCount > 0)
+      })
   })
+
 
   app.get('/admins', (req, res) => {
     adminCollection.find({})
-    .toArray((err, documents) => {
-      res.send(documents)
-    })
+      .toArray((err, documents) => {
+        res.send(documents)
+      })
   })
 
 
   app.post('/orders', (req, res) => {
     const newOrder = req.body;
-    
+
     orderCollection.insertOne(newOrder)
-    .then(result => {
-      res.send(result.insertedCount > 0)
-    })
+      .then(result => {
+        res.send(result.insertedCount > 0)
+      })
   })
 
   app.get('/orders', (req, res) => {
     orderCollection.find({})
-    .toArray((err, documents) => {
-      res.send(documents)
-    })
+      .toArray((err, documents) => {
+        res.send(documents)
+      })
   })
 
 
